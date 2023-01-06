@@ -5,23 +5,29 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicInteger
 
 fun loadContributorsCallbacks(service: GitHubService, req: RequestData, updateResults: (List<User>) -> Unit) {
-    service.getOrgReposCall(req.org).onResponse { responseRepos ->
-        logRepos(req, responseRepos)
-        val repos = responseRepos.bodyList()
-        val allUsers = mutableListOf<User>()
-        for (repo in repos) {
-            service.getRepoContributorsCall(req.org, repo.name).onResponse { responseUsers ->
-                logUsers(repo, responseUsers)
-                val users = responseUsers.bodyList()
-                allUsers += users
-            }
-        }
-        // TODO: Why this code doesn't work? How to fix that?
-        updateResults(allUsers.aggregate())
-    }
+//    service.getOrgReposCall(req.org).onResponse { responseRepos ->
+//        logRepos(req, responseRepos)
+//        val repos = responseRepos.bodyList()
+//        val allUsers = mutableListOf<User>()
+//        val countDownLatch = CountDownLatch(repos.size)
+//        for (repo in repos) {
+//            // all requests are asynchronous and can happen in any order
+//            service.getRepoContributorsCall(req.org, repo.name).onResponse { responseUsers ->
+//                logUsers(repo, responseUsers)
+//                val users = responseUsers.bodyList()
+//                allUsers += users
+//                countDownLatch.countDown()
+//            }
+//        }
+//        // this callback needs to wait for all the above asynchronous requests to finish
+//        countDownLatch.await()
+//        updateResults(allUsers.aggregate())
+//    }
+    TODO()
 }
 
 inline fun <T> Call<T>.onResponse(crossinline callback: (Response<T>) -> Unit) {
