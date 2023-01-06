@@ -20,7 +20,7 @@ suspend fun loadContributorsChannels(
         val channel = Channel<List<User>>()
 
         repos.map { repo ->
-            async(Dispatchers.Default) {
+            async {
                 val lst = service.getRepoContributors(req.org, repo.name)
                     .also { logUsers(repo, it) }
                     .bodyList()
